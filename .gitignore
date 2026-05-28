@@ -1,0 +1,16 @@
+# .gitignore
+# Ignore virtual environments
+.venv/
+venv/
+ENV/
+
+# Ignore local secret keys (CRITICAL)
+.streamlit/secrets.toml
+
+# Ignore Python caching layers
+**/__pycache__/
+*.pyc
+
+# Optional: Ignore mock data if you want it dynamically generated 
+# But for this portfolio, we WANT to commit the data so the dashboard works instantly!
+# data/mock_historical.csv
