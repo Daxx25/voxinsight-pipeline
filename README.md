@@ -74,6 +74,7 @@ Groq Processing Engine: Distributes text packages to the high-speed Groq platfor
 Deterministic Guardrails (core/guards.py): Verifies the AI's data extractions against the source text. If a quote doesn't match verbatim, it throws a flag to preserve data trustworthiness.
 
 Telemetry Interfaces (app/): Hosts an analytical dashboard with dynamic issue tracking alerts and a split-screen playground for deep-dive conversation tracking.
+```mermaid
 
 🌟 Core System Capabilities
 1. Lightning-Fast Analysis (Powered by Groq)
