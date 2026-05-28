@@ -12,72 +12,92 @@ Live Application Link: **[YOUR_STREAMLIT_APP_URL_HERE]**
 
 The core engineering strategy decouples the data ingestion, AI processing, and validation rules to guarantee system uptime, cost management, and perfect data traceability.
 
-+---------------------------------------------------------------------------------+
-|                                INGESTION LAYER                                  |
-|  [ Gong Call Logs (Long) ]   [ Intercom Chats (Mid) ]   [ Zendesk Tickets (Short) ] |
-+---------------------------------------------------+-----------------------------+
-|
-v
-+---------------------------------------------------------------------------------+
-|                                ORCHESTRATION LAYER                              |
-|           - Regex Whitespace & Conversational Artifact Filtering               |
-|           - Input Token Buffer Budget Enforcement (Safety Guard)                |
-+---------------------------------------------------+-----------------------------+
-|
-v
-+---------------------------------------------------------------------------------+
-|                                AI PROCESSING ENGINE                             |
-|          - Groq Hardware Execution Network (Llama-3.3-70b Inference)             |
-|          - Enforced Schema Validation Contracts (Strict JSON Mode)               |
-+---------------------------------------------------+-----------------------------+
-|
-v
-+---------------------------------------------------------------------------------+
-|                         DETERMINISTIC GUARDRAILS (POST-AI)                      |
-|       [ Substring Pattern Match Check ] ------> Verifies Quote Verbatim         |
-|                                                   |                             |
-|              +------------------------------------+----------------------+      |
-|              | (Passes Traceability)                                     | (Fails)|
-|              v                                                           v      |
-|     [ Verified Safe Data ]                                      [ Hallucination Flag ]
-+--------------+------------------------------------------------------------------+
-|
-v
-+---------------------------------------------------------------------------------+
-|                               PRESENTATION & TELEMETRY                          |
-|         - Executive PM Priority Matrix Dashboard (Plotly & Analytics)           |
-|         - Trace-To-Source Visual Validation Split-Screen (Playground)           |
-+---------------------------------------------------------------------------------+
+```mermaid
+graph TD
+    %% Style Definitions
+    classDef ingest fill:#2b5c8f,stroke:#333,stroke-width:2px,color:#fff;
+    classDef orchestrate fill:#4a90e2,stroke:#333,stroke-width:2px,color:#fff;
+    classDef ai fill:#50b83c,stroke:#333,stroke-width:2px,color:#fff;
+    classDef guard fill:#f5a623,stroke:#333,stroke-width:2px,color:#fff;
+    classDef telemetry fill:#9013fe,stroke:#333,stroke-width:2px,color:#fff;
+    classDef fail fill:#d0021b,stroke:#333,stroke-width:2px,color:#fff;
 
+    %% Ingestion Layer
+    subgraph Ingestion_Layer [Ingestion Layer]
+        A1[Gong Call Logs <br> Long / Conversational]:::ingest
+        A2[Intercom Chats <br> Short / Low Latency]:::ingest
+        A3[Zendesk Tickets <br> Mid / Structured]:::ingest
+    end
 
----
+    %% Orchestration Layer
+    subgraph Orchestration_Layer [Orchestration Layer]
+        B[core/pipeline.py<br>Regex Pre-cleaning & Token Budgeting]:::orchestrate
+    end
 
-## 🌟 Core System Capabilities
+    %% AI Processing Layer
+    subgraph AI_Layer [AI Processing Engine]
+        C[Groq API Client<br>Llama-3.3-70b-versatile]:::ai
+        D[Strict JSON Schema Contract]:::ai
+    end
 
-### 1. Lightning-Fast Analysis (Powered by Groq)
-By migrating from legacy models to the **Groq Llama-3.3-70b-versatile** engine, text extraction delays drop from several seconds down to **200–400 milliseconds**. This makes it viable for high-volume enterprise production processing.
+    %% Guardrails Layer
+    subgraph Guardrails_Layer [Deterministic Guardrails]
+        E{core/guards.py<br>Substring Pattern Verification Check}:::guard
+        F[Hallucination Alert Flagged]:::fail
+    end
 
-### 2. Anti-Hallucination Data Guardrails
-AI metrics are useless if the underlying data can't be trusted. VoxInsight solves this by running a deterministic string verification check on the extracted customer text. If the AI "paraphrases" or creates an quote, the platform flags the entry to keep the database accurate.
+    %% Presentation Layer
+    subgraph Presentation_Layer [Presentation & Telemetry]
+        G[app/dashboard.py<br>Executive PM Priority Matrix]:::telemetry
+        H[app/playground.py<br>Split-Screen Trace Audit UI]:::telemetry
+    end
 
-### 3. Dynamic Anomaly Alert Signals
-The analytics engine features an automated **Trend Anomaly Watchdog**. It calculates shifting averages over a 90-day rolling timeline. If customer sentiment drops heavily within a specific feature module, an executive-level system alert is instantly generated.
+    %% Core Data Flow Connections
+    A1 --> B
+    A2 --> B
+    A3 --> B
+    B --> C
+    C --> D
+    D --> E
+    
+    %% Conditional Branching Guardrails
+    E -- Fail: Paraphrased/Hallucinated --> F
+    E -- Pass: 100% Verbatim Match --> G
+    E -- Pass: 100% Verbatim Match --> H
+Architectural Pipeline Breakdown
+Data Stream Ingestion Layer: Routes structured ticket materials and noisy conversation streams through unified text entry routes.
 
----
+Orchestration Layer (core/pipeline.py): Strips system artifacts, repetitive signatures, and conversational fluff to optimize data sizes, preventing budget overruns or token context crashes.
 
-## 🛠️ Technology Stack & Dependencies
+Groq Processing Engine: Distributes text packages to the high-speed Groq platform at temperature=0.0 within a structural JSON mode layout.
 
-* **Frontend Dashboard UI:** Streamlit (Multi-page configuration routing)
-* **High-Speed Inference Network:** Groq SDK (`llama-3.3-70b-versatile`)
-* **Strict Structural Protocols:** Python `Enum` & custom schema JSON mapping contracts
-* **Data Presentation Engine:** Pandas & Plotly (Rolling sentiment trajectories)
-* **Pipeline Defensiveness:** Tenacity (Exponential wait/retry backoff loop handlers)
+Deterministic Guardrails (core/guards.py): Verifies the AI's data extractions against the source text. If a quote doesn't match verbatim, it throws a flag to preserve data trustworthiness.
 
----
+Telemetry Interfaces (app/): Hosts an analytical dashboard with dynamic issue tracking alerts and a split-screen playground for deep-dive conversation tracking.
 
-## 📂 Repository Directory Layout
+🌟 Core System Capabilities
+1. Lightning-Fast Analysis (Powered by Groq)
+By migrating from legacy models to the Groq Llama-3.3-70b-versatile engine, text extraction delays drop from several seconds down to 200–400 milliseconds. This makes it viable for high-volume enterprise production processing.
 
-```text
+2. Anti-Hallucination Data Guardrails
+AI metrics are useless if the underlying data can't be trusted. VoxInsight solves this by running a deterministic string verification check on the extracted customer text. If the AI "paraphrases" or creates a quote, the platform flags the entry to keep the database accurate.
+
+3. Dynamic Anomaly Alert Signals
+The analytics engine features an automated Trend Anomaly Watchdog. It calculates shifting averages over a 90-day rolling timeline. If customer sentiment drops heavily within a specific feature module, an executive-level system alert is instantly generated.
+
+🛠️ Technology Stack & Dependencies
+Frontend Dashboard UI: Streamlit (Multi-page configuration routing)
+
+High-Speed Inference Network: Groq SDK (llama-3.3-70b-versatile)
+
+Strict Structural Protocols: Python Enum & custom schema JSON mapping contracts
+
+Data Presentation Engine: Pandas & Plotly (Rolling sentiment trajectories)
+
+Pipeline Defensiveness: Tenacity (Exponential wait/retry backoff loop handlers)
+
+📂 Repository Directory Layout
+Plaintext
 voxinsight-pipeline/
 │
 ├── .streamlit/
@@ -131,26 +151,3 @@ Short-Form Content (Intercom Chat): Low processing cost, high immediacy. Instant
 Medium-Form Content (Zendesk Support): High structural density. Optimizes resources by routing directly into categorized support metrics.
 
 Long-Form Content (Gong Call Logs): High conversation noise. Strips out introductory chatter and scheduling text to keep processing costs low and prevent context errors.
-
-
-***
-
-## 🔄 How to Push and Update GitHub Neatly
-
-Whenever you make changes to your local files and want to update your public GitHub repository cleanly, use this sequential step-by-step terminal routine:
-
-```bash
-# 1. Check which files have been modified or added
-git status
-
-# 2. Stage all modifications (your .gitignore file will automatically block secrets.toml)
-git add .
-
-# 3. Write a crisp, descriptive commit message following professional naming conventions
-git commit -m "docs: implement comprehensive architecture diagram and rewrite project README"
-
-# 4. Safely pull down any remote updates to prevent branching conflicts
-git pull origin main --rebase
-
-# 5. Securely dispatch your local codebase updates to your live production repo
-git push origin main
