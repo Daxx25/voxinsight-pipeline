@@ -64,41 +64,43 @@ graph TD
     E -- Fail: Paraphrased/Hallucinated --> F
     E -- Pass: 100% Verbatim Match --> G
     E -- Pass: 100% Verbatim Match --> H
-Architectural Pipeline Breakdown
-Data Stream Ingestion Layer: Routes structured ticket materials and noisy conversation streams through unified text entry routes.
+```
 
-Orchestration Layer (core/pipeline.py): Strips system artifacts, repetitive signatures, and conversational fluff to optimize data sizes, preventing budget overruns or token context crashes.
+### Architectural Pipeline Breakdown
+* **Data Stream Ingestion Layer:** Routes structured ticket materials and noisy conversation streams through unified text entry routes.
+* **Orchestration Layer (`core/pipeline.py`):** Strips system artifacts, repetitive signatures, and conversational fluff to optimize data sizes, preventing budget overruns or token context crashes.
+* **Groq Processing Engine:** Distributes text packages to the high-speed Groq platform at `temperature=0.0` within a structural JSON mode layout.
+* **Deterministic Guardrails (`core/guards.py`):** Verifies the AI's data extractions against the source text. If a quote doesn't match verbatim, it throws a flag to preserve data trustworthiness.
+* **Telemetry Interfaces (`app/`):** Hosts an analytical dashboard with dynamic issue tracking alerts and a split-screen playground for deep-dive conversation tracking.
 
-Groq Processing Engine: Distributes text packages to the high-speed Groq platform at temperature=0.0 within a structural JSON mode layout.
+---
 
-Deterministic Guardrails (core/guards.py): Verifies the AI's data extractions against the source text. If a quote doesn't match verbatim, it throws a flag to preserve data trustworthiness.
+## 🌟 Core System Capabilities
 
-Telemetry Interfaces (app/): Hosts an analytical dashboard with dynamic issue tracking alerts and a split-screen playground for deep-dive conversation tracking.
-```mermaid
+### 1. Lightning-Fast Analysis (Powered by Groq)
+By migrating from legacy models to the **Groq Llama-3.3-70b-versatile** engine, text extraction delays drop from several seconds down to **200–400 milliseconds**. This makes it viable for high-volume enterprise production processing.
 
-🌟 Core System Capabilities
-1. Lightning-Fast Analysis (Powered by Groq)
-By migrating from legacy models to the Groq Llama-3.3-70b-versatile engine, text extraction delays drop from several seconds down to 200–400 milliseconds. This makes it viable for high-volume enterprise production processing.
-
-2. Anti-Hallucination Data Guardrails
+### 2. Anti-Hallucination Data Guardrails
 AI metrics are useless if the underlying data can't be trusted. VoxInsight solves this by running a deterministic string verification check on the extracted customer text. If the AI "paraphrases" or creates a quote, the platform flags the entry to keep the database accurate.
 
-3. Dynamic Anomaly Alert Signals
-The analytics engine features an automated Trend Anomaly Watchdog. It calculates shifting averages over a 90-day rolling timeline. If customer sentiment drops heavily within a specific feature module, an executive-level system alert is instantly generated.
+### 3. Dynamic Anomaly Alert Signals
+The analytics engine features an automated **Trend Anomaly Watchdog**. It calculates shifting averages over a 90-day rolling timeline. If customer sentiment drops heavily within a specific feature module, an executive-level system alert is instantly generated.
 
-🛠️ Technology Stack & Dependencies
-Frontend Dashboard UI: Streamlit (Multi-page configuration routing)
+---
 
-High-Speed Inference Network: Groq SDK (llama-3.3-70b-versatile)
+## 🛠️ Technology Stack & Dependencies
 
-Strict Structural Protocols: Python Enum & custom schema JSON mapping contracts
+* **Frontend Dashboard UI:** Streamlit (Multi-page configuration routing)
+* **High-Speed Inference Network:** Groq SDK (`llama-3.3-70b-versatile`)
+* **Strict Structural Protocols:** Python `Enum` & custom schema JSON mapping contracts
+* **Data Presentation Engine:** Pandas & Plotly (Rolling sentiment trajectories)
+* **Pipeline Defensiveness:** Tenacity (Exponential wait/retry backoff loop handlers)
 
-Data Presentation Engine: Pandas & Plotly (Rolling sentiment trajectories)
+---
 
-Pipeline Defensiveness: Tenacity (Exponential wait/retry backoff loop handlers)
+## 📂 Repository Directory Layout
 
-📂 Repository Directory Layout
-Plaintext
+```text
 voxinsight-pipeline/
 │
 ├── .streamlit/
@@ -123,12 +125,17 @@ voxinsight-pipeline/
 │
 ├── .gitignore                # System-level version control exception file
 └── requirements.txt          # Explicitly pinned production dependencies
-🚀 Local Deployment Setup
+```
+
+---
+
+## 🚀 Local Deployment Setup
+
 Follow these commands to clone, initialize, and execute the system environment locally:
 
-Bash
+```bash
 # 1. Clone your project repository
-git clone [https://github.com/YOUR_GITHUB_USERNAME/voxinsight-pipeline.git](https://github.com/YOUR_GITHUB_USERNAME/voxinsight-pipeline.git)
+git clone https://github.com/YOUR_GITHUB_USERNAME/voxinsight-pipeline.git
 cd voxinsight-pipeline
 
 # 2. Build local virtual environment isolation layers using uv
@@ -144,11 +151,13 @@ python scripts/generate_mock_data.py
 
 # 5. Fire up the local web engine server
 uv run streamlit run app/main.py
-📑 Strategic Business Context
+```
+
+---
+
+## 📑 Strategic Business Context
+
 VoxInsight was engineered to map directly to standard software delivery workflows:
-
-Short-Form Content (Intercom Chat): Low processing cost, high immediacy. Instantly tracks immediate operational roadblocks and breaking UI bugs.
-
-Medium-Form Content (Zendesk Support): High structural density. Optimizes resources by routing directly into categorized support metrics.
-
-Long-Form Content (Gong Call Logs): High conversation noise. Strips out introductory chatter and scheduling text to keep processing costs low and prevent context errors.
+* **Short-Form Content (Intercom Chat):** Low processing cost, high immediacy. Instantly tracks immediate operational roadblocks and breaking UI bugs.
+* **Medium-Form Content (Zendesk Support):** High structural density. Optimizes resources by routing directly into categorized support metrics.
+* **Long-Form Content (Gong Call Logs):** High conversation noise. Strips out introductory chatter and scheduling text to keep processing costs low and prevent context errors.
