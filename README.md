@@ -4,7 +4,7 @@ VoxInsight is an enterprise-tier data processing and telemetry engine designed t
 
 By leveraging ultra-low latency infrastructure via **Groq (Llama-3.3)** and combining it with deterministic Python validation layers, VoxInsight eliminates the core failure modes of LLMs—hallucinations and high API latency—to deliver product insights that engineering teams can instantly trust.
 
-Live Application Link: **[YOUR_STREAMLIT_APP_URL_HERE]**
+Live Application Link: **https://voc-insight.streamlit.app/**
 
 ---
 
