@@ -12,7 +12,7 @@ def render_dashboard():
 
     file_path = os.path.join("data", "mock_historical.csv")
 
-    # --- LIVE DATA GENERATION MANAGEMENT BLOCK ---
+   # --- LIVE DATA GENERATION MANAGEMENT BLOCK ---
     st.write("### 🛠️ Telemetry Lifecycle Control Node")
     c1, c2 = st.columns([3, 1])
     with c1:
@@ -23,8 +23,19 @@ def render_dashboard():
     with c2:
         if st.button("🔄 Regenerate Dataset", type="secondary", use_container_width=True):
             with st.spinner("Re-seeding database matrix..."):
+                # 1. Force clear any memory cache Streamlit is holding onto
+                if hasattr(st, "cache_data"):
+                    st.cache_data.clear()
+                
+                # 2. Write the new randomized data to disk
                 row_count = generate_live_dataset(file_path)
+                
+                # 3. Set a session state flag to notify the app that fresh data is ready
+                st.session_state["data_refreshed"] = True
+                
                 st.success(f"Generated {row_count} new entries!")
+                
+                # 4. Trigger an immediate rerun to reload the file top-to-bottom
                 st.rerun()
 
     # Automatic baseline safety check: if file doesn't exist, generate it silently
